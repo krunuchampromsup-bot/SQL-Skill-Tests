@@ -1,309 +1,176 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>SQL Learning Center - T.Nuch Smart Com</title>
-    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SQL VIEW Master Class - T.Nuch Smart Com</title>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
         :root {
-            --primary-blue: #2563eb;
-            --soft-blue: #eff6ff;
-            --text-main: #1e293b;
-            --text-light: #64748b;
-            --bg-body: #f8fafc;
-            --white: #ffffff;
-            --border: #e2e8f0;
-            --success: #10b981;
-            --error: #ef4444;
+            --primary: #2563eb;
+            --bg: #0f172a;
+            --card: #1e293b;
+            --text: #f8fafc;
+            --accent: #34d399;
             --gold: #f59e0b;
         }
+        body { font-family: 'Prompt', sans-serif; background-color: var(--bg); color: var(--text); margin: 0; }
+        .container { max-width: 1000px; margin: auto; padding: 20px; }
+        
+        /* Header & Leaderboard Theme */
+        .hero-section { text-align: center; padding: 40px; background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); border-radius: 20px; border: 1px solid var(--primary); margin-bottom: 30px; }
+        .hero-icon { font-size: 50px; color: #22d3ee; margin-bottom: 10px; }
+        
+        .box { background: var(--card); border-radius: 15px; padding: 25px; margin-bottom: 25px; border: 1px solid #334155; }
+        h2 { color: var(--accent); border-left: 5px solid var(--primary); padding-left: 15px; }
 
-        body {
-            font-family: 'Prompt', sans-serif;
-            background-color: var(--bg-body);
-            color: var(--text-main);
-            margin: 0;
-            line-height: 1.6;
-        }
+        /* Syntax Display */
+        .syntax-box { background: #000; padding: 20px; border-radius: 10px; border-left: 4px solid #a855f7; font-family: monospace; color: #e2e8f0; line-height: 1.5; }
+        .keyword { color: #f472b6; font-weight: bold; }
+        .variable { color: #60a5fa; }
 
-        .header {
-            background: var(--white);
-            padding: 40px 20px;
-            text-align: center;
-            border-bottom: 1px solid var(--border);
-            margin-bottom: 30px;
-        }
+        /* Table Simulation */
+        .table-sim { width: 100%; border-collapse: collapse; margin: 15px 0; background: #0f172a; }
+        .table-sim th { background: var(--primary); color: white; padding: 10px; text-align: left; }
+        .table-sim td { border: 1px solid #334155; padding: 10px; }
 
-        .container { max-width: 1000px; margin: auto; padding: 0 20px; }
-
-        .box {
-            background: var(--white);
-            border-radius: 16px;
-            padding: 30px;
-            margin-bottom: 30px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-            border: 1px solid var(--border);
-        }
-
-        /* Tab System */
-        .tabs { display: flex; gap: 10px; margin-bottom: 20px; overflow-x: auto; padding-bottom: 10px; }
-        .tab-btn {
-            padding: 12px 24px; background: var(--white); border: 1px solid var(--border);
-            border-radius: 8px; cursor: pointer; font-family: 'Prompt'; font-weight: 500;
-            color: var(--text-light); transition: 0.3s; white-space: nowrap;
-        }
-        .tab-btn.active { background: var(--primary-blue); color: var(--white); border-color: var(--primary-blue); }
-        .tab-content { display: none; animation: fadeIn 0.4s ease; }
-        .tab-content.active { display: block; }
-
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
-        /* Typography & Code */
-        h2 { color: var(--primary-blue); font-weight: 600; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
-        .code-block {
-            background: #1e293b; color: #34d399; padding: 20px; border-radius: 12px;
-            font-family: 'Courier New', monospace; position: relative; margin: 15px 0; overflow-x: auto;
-        }
-        .code-label { position: absolute; top: 0; right: 20px; background: #334155; padding: 2px 10px; border-radius: 0 0 5px 5px; font-size: 0.7rem; color: white; }
-        .highlight-box { background: var(--soft-blue); border-left: 4px solid var(--primary-blue); padding: 15px; border-radius: 0 8px 8px 0; margin: 15px 0; }
-
-        /* Quiz Elements */
-        textarea {
-            width: 100%; height: 100px; border-radius: 10px; border: 1px solid var(--border);
-            padding: 15px; font-family: 'Courier New', monospace; font-size: 1rem; margin-top: 10px;
-            background: #f9fafb;
-        }
-        .btn {
-            padding: 12px 25px; border-radius: 8px; border: none; font-family: 'Prompt';
-            font-weight: 600; cursor: pointer; transition: 0.3s;
-        }
-        .btn-primary { background: var(--primary-blue); color: white; }
-        .btn-gold { background: var(--gold); color: white; }
-        .btn:hover { opacity: 0.9; transform: translateY(-2px); }
-
-        .feedback { margin-top: 10px; font-weight: 600; }
-        .success { color: var(--success); }
-        .error { color: var(--error); }
-        .hidden { display: none !important; }
-
-        #sticky-bar {
-            position: sticky; top: 0; z-index: 100; background: var(--white);
-            padding: 15px 30px; border-bottom: 2px solid var(--primary-blue);
-            display: flex; justify-content: space-between; align-items: center;
-            border-radius: 0 0 16px 16px; margin-bottom: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-        }
+        /* Quiz UI */
+        textarea { width: 100%; height: 80px; background: #0f172a; color: var(--accent); border: 1px solid var(--primary); border-radius: 8px; padding: 15px; font-family: monospace; font-size: 16px; margin: 10px 0; }
+        .btn { cursor: pointer; padding: 12px 25px; border-radius: 8px; border: none; font-weight: 600; transition: 0.3s; }
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-check { background: var(--accent); color: #0f172a; }
+        .hidden { display: none; }
     </style>
 </head>
 <body>
 
-<div class="header">
-    <h1 style="margin:0; font-size: 2.2rem; color: var(--primary-blue);"><i class="fa-solid fa-database"></i> SQL VIEW Master Class</h1>
-    <p style="color: var(--text-light); margin-top: 10px;">บทเรียนและแบบทดสอบปฏิบัติ โดย ครูนุช Smart ComClass</p>
-</div>
-
 <div class="container">
-    
-    <div id="learning-section" class="box">
-        <h2><i class="fa-solid fa-graduation-cap"></i> บทเรียนเรื่อง SQL VIEW</h2>
-        <p>SQL VIEW คือ Virtual Table หรือตารางเสมือนที่สร้างจากคำสั่ง SELECT ช่วยให้การจัดการข้อมูลซับซ้อนกลายเป็นเรื่องง่าย</p>
+    <div class="hero-section">
+        <div class="hero-icon"><i class="fas fa-microchip"></i></div>
+        <h1 style="margin:0; color:#22d3ee;">COMPUTER CASE HERO</h1>
+        <p>SQL VIEW Learning & Challenge</p>
+    </div>
 
+    <div id="lesson" class="box">
+        <h2>1. รูปแบบคำสั่ง (Syntax) พื้นฐาน</h2>
+        <p>VIEW คือตารางเสมือนที่สร้างจากคำสั่ง SELECT เพื่อช่วยให้การจัดการข้อมูลง่ายขึ้น</p>
         
-
-        <div class="tabs">
-            <button class="tab-btn active" onclick="openTab(event, 'view-table')">VIEW TABLE (SELECT)</button>
-            <button class="tab-btn" onclick="openTab(event, 'insert-view')">INSERT VIEW</button>
-            <button class="tab-btn" onclick="openTab(event, 'update-view')">UPDATE VIEW</button>
-            <button class="tab-btn" onclick="openTab(event, 'delete-view')">DELETE VIEW</button>
+        <div class="syntax-box">
+            <span class="keyword">CREATE VIEW</span> <span class="variable">view_name</span> <span class="keyword">AS</span><br>
+            <span class="keyword">SELECT</span> column1, column2, ...<br>
+            <span class="keyword">FROM</span> table_name<br>
+            <span class="keyword">WHERE</span> condition;
         </div>
 
-        <div id="view-table" class="tab-content active">
-            <div class="highlight-box"><b>SELECT:</b> ใช้ดึงข้อมูลจาก VIEW มาแสดงผลเหมือนตารางปกติ</div>
-            <div class="code-block"><div class="code-label">SQL</div>SELECT * FROM view_name;</div>
+        <div style="margin-top:20px;">
+            <p><strong>ตัวอย่างการใช้งาน:</strong> สร้าง View เพื่อดูเฉพาะพนักงานแผนก IT</p>
+            <div class="syntax-box" style="border-left-color: var(--accent);">
+                CREATE VIEW it_staff AS SELECT name, salary FROM employees WHERE dept = 'IT';
+            </div>
+            <p><strong>ผลลัพธ์ที่ได้:</strong></p>
+            <table class="table-sim">
+                <tr><th>name</th><th>salary</th></tr>
+                <tr><td>Somsak</td><td>45,000</td></tr>
+                <tr><td>Wichai</td><td>38,000</td></tr>
+            </table>
         </div>
-
-        <div id="insert-view" class="tab-content">
-            <div class="highlight-box"><b>INSERT:</b> เพิ่มข้อมูลลงตารางหลักผ่าน VIEW (ต้องเป็น Updatable View)</div>
-            <div class="code-block"><div class="code-label">SQL</div>INSERT INTO view_name (col1, col2) VALUES (val1, val2);</div>
-        </div>
-
-        <div id="update-view" class="tab-content">
-            <div class="highlight-box"><b>UPDATE:</b> แก้ไขข้อมูลในตารางหลักผ่านชื่อ VIEW</div>
-            <div class="code-block"><div class="code-label">SQL</div>UPDATE view_name SET col1 = val1 WHERE condition;</div>
-        </div>
-
-        <div id="delete-view" class="tab-content">
-            <div class="highlight-box"><b>DELETE:</b> ลบแถวข้อมูลออกจากตารางหลักผ่าน VIEW</div>
-            <div class="code-block"><div class="code-label">SQL</div>DELETE FROM view_name WHERE condition;</div>
-        </div>
-    </div>
-
-    <div id="instruction-section" class="box">
-        <h2><i class="fa-solid fa-clipboard-list"></i> ขั้นตอนการปฏิบัติ</h2>
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 20px; text-align: center;">
-            <div><i class="fa-solid fa-user-pen" style="font-size: 1.5rem; color: var(--primary-blue);"></i><p>1. กรอกชื่อผู้สอบ</p></div>
-            <div><i class="fa-solid fa-keyboard" style="font-size: 1.5rem; color: var(--primary-blue);"></i><p>2. เขียนคำสั่ง SQL</p></div>
-            <div><i class="fa-solid fa-certificate" style="font-size: 1.5rem; color: var(--primary-blue);"></i><p>3. รับใบประกาศ</p></div>
-        </div>
-    </div>
-
-    <div id="setup-screen" class="box" style="text-align: center;">
-        <input type="text" id="student-name" placeholder="ชื่อ-นามสกุล ของนักเรียน" style="padding: 15px; width: 60%; border-radius: 10px; border: 1px solid var(--border); margin-bottom: 15px; font-family: 'Prompt';">
-        <br>
-        <select id="mode" style="padding: 12px; border-radius: 10px; border: 1px solid var(--border); margin-right: 10px; font-family: 'Prompt';">
-            <option value="learn">โหมดเรียนรู้ (มีเฉลย)</option>
-            <option value="exam">โหมดสอบปฏิบัติ (จับเวลา)</option>
-        </select>
-        <button class="btn btn-primary" onclick="startQuiz()">เริ่มต้นทำแบบทดสอบ</button>
+        <button class="btn btn-primary" onclick="startQuiz()">เริ่มทำแบบทดสอบ (5 ข้อ)</button>
     </div>
 
     <div id="quiz-area" class="hidden">
-        <div id="sticky-bar">
-            <span><i class="fa-solid fa-user"></i> <b id="user-display"></b></span>
-            <span><i class="fa-solid fa-clock"></i> <b id="timer">--:--</b></span>
-            <span>คะแนน: <b id="score-display">0</b></span>
+        <div id="score-board" class="box" style="text-align:center; border-color: var(--gold);">
+            <h3>คะแนนปัจจุบัน: <span id="current-score">0</span> / 100</h3>
         </div>
 
-        <div id="questions">
-            <div class="box">
-                <h3>โจทย์ที่ 1: การสร้าง VIEW</h3>
-                <p>จงสร้าง VIEW ชื่อ <code>it_staff</code> จากตาราง <code>employees</code> เฉพาะคนที่อยู่แผนก 'IT'</p>
-                <textarea id="q1" placeholder="พิมพ์คำสั่ง SQL..."></textarea>
-                <button class="btn btn-primary" onclick="checkAnswer(1, 'create view', 'it', 20)">ตรวจคำตอบ</button>
-                <div id="fb1" class="feedback"></div>
-                <div id="hint1" class="hidden"><pre class="code-block">CREATE VIEW it_staff AS SELECT * FROM employees WHERE department = 'IT';</pre></div>
-            </div>
-
-            <div class="box">
-                <h3>โจทย์ที่ 2: การดึงข้อมูลจาก VIEW</h3>
-                <p>จงเขียนคำสั่งแสดงข้อมูลทั้งหมดจาก VIEW ที่ชื่อว่า <code>it_staff</code></p>
-                <textarea id="q2"></textarea>
-                <button class="btn btn-primary" onclick="checkAnswer(2, 'select', 'it_staff', 20)">ตรวจคำตอบ</button>
-                <div id="fb2" class="feedback"></div>
-                <div id="hint2" class="hidden"><pre class="code-block">SELECT * FROM it_staff;</pre></div>
-            </div>
-
-            <div class="box">
-                <h3>โจทย์ที่ 3: การแก้ไขข้อมูลผ่าน VIEW</h3>
-                <p>จงอัปเดตเงินเดือน (salary) ใน VIEW <code>it_staff</code> ให้เป็น 50000 สำหรับพนักงานที่มี id = 10</p>
-                <textarea id="q3"></textarea>
-                <button class="btn btn-primary" onclick="checkAnswer(3, 'update', '50000', 20)">ตรวจคำตอบ</button>
-                <div id="fb3" class="feedback"></div>
-                <div id="hint3" class="hidden"><pre class="code-block">UPDATE it_staff SET salary = 50000 WHERE id = 10;</pre></div>
-            </div>
+        <div class="box quiz-box">
+            <h3>โจทย์ข้อที่ 1: การสร้าง VIEW</h3>
+            <p>จงสร้าง VIEW ชื่อ <code>top_sales</code> จากตาราง <code>orders</code> โดยเลือกทุกคอลัมน์ที่มี <code>amount > 5000</code></p>
+            <textarea id="q1" placeholder="พิมพ์คำสั่ง SQL ที่นี่..."></textarea>
+            <button class="btn btn-check" onclick="checkAnswer(1, 'create view', 'top_sales', 20)">ตรวจสอบ</button>
+            <div id="fb1" style="margin-top:10px;"></div>
         </div>
 
-        <div style="text-align: center; margin-bottom: 50px;">
-            <button class="btn btn-gold" style="padding: 20px 60px;" onclick="finishQuiz()">ส่งข้อสอบและสรุปผล</button>
+        <div class="box quiz-box">
+            <h3>โจทย์ข้อที่ 2: การเรียกใช้ VIEW</h3>
+            <p>จงเขียนคำสั่งแสดงข้อมูลทั้งหมดจาก VIEW ที่มีชื่อว่า <code>top_sales</code></p>
+            <textarea id="q2"></textarea>
+            <button class="btn btn-check" onclick="checkAnswer(2, 'select', 'top_sales', 20)">ตรวจสอบ</button>
+            <div id="fb2" style="margin-top:10px;"></div>
         </div>
+
+        <div class="box quiz-box">
+            <h3>โจทย์ข้อที่ 3: การแก้ไขข้อมูลผ่าน VIEW</h3>
+            <p>จงอัปเดต <code>amount</code> ใน VIEW <code>top_sales</code> ให้เป็น 6000 สำหรับรายการที่มี <code>id = 101</code></p>
+            <textarea id="q3"></textarea>
+            <button class="btn btn-check" onclick="checkAnswer(3, 'update', '6000', 20)">ตรวจสอบ</button>
+            <div id="fb3" style="margin-top:10px;"></div>
+        </div>
+
+        <div class="box quiz-box">
+            <h3>โจทย์ข้อที่ 4: การลบข้อมูลผ่าน VIEW</h3>
+            <p>จงลบแถวข้อมูลออกจาก VIEW <code>top_sales</code> สำหรับรายการที่มี <code>id = 99</code></p>
+            <textarea id="q4"></textarea>
+            <button class="btn btn-check" onclick="checkAnswer(4, 'delete', '99', 20)">ตรวจสอบ</button>
+            <div id="fb4" style="margin-top:10px;"></div>
+        </div>
+
+        <div class="box quiz-box">
+            <h3>โจทย์ข้อที่ 5: การลบทิ้ง (DROP VIEW)</h3>
+            <p>หากไม่ต้องการใช้งาน VIEW <code>top_sales</code> แล้ว ต้องใช้คำสั่งใดเพื่อลบ VIEW นี้ออกจากระบบ</p>
+            <textarea id="q5"></textarea>
+            <button class="btn btn-check" onclick="checkAnswer(5, 'drop view', 'top_sales', 20)">ตรวจสอบ</button>
+            <div id="fb5" style="margin-top:10px;"></div>
+        </div>
+
+        <button class="btn btn-primary" style="width:100%;" onclick="finishQuiz()">ส่งข้อสอบทั้งหมด</button>
     </div>
 
-    <div id="result-screen" class="hidden">
-        <div class="box" style="text-align: center;">
-            <h2 id="final-msg" style="justify-content: center;">สรุปผลคะแนน</h2>
-            <p style="font-size: 3rem; font-weight: 700; color: var(--primary-blue);" id="final-score">0</p>
-            <div id="cert-box" class="hidden">
-                <button class="btn btn-primary" onclick="downloadCert()"><i class="fa-solid fa-award"></i> ดาวน์โหลดใบประกาศนียบัตร</button>
-            </div>
-            <br>
-            <button class="btn" onclick="location.reload()">กลับหน้าหลัก</button>
-        </div>
+    <div id="result-screen" class="hidden box" style="text-align:center;">
+        <h1 style="color:var(--gold);">ยินดีด้วย! เหล่า Hero</h1>
+        <p>คุณทำคะแนนได้</p>
+        <h2 id="final-score" style="font-size: 50px;">0</h2>
+        <p>คะแนนของคุณถูกบันทึกเข้าระบบ Leaderboard แล้ว</p>
+        <button class="btn btn-primary" onclick="location.reload()">ทำใหม่อีกครั้ง</button>
     </div>
 </div>
 
-<canvas id="certCanvas" width="1200" height="848" style="display:none;"></canvas>
-
 <script>
     let score = 0;
-    let time = 900;
-    let timer;
     let answered = new Set();
 
-    function openTab(evt, tabName) {
-        let i, tabContent, tabBtns;
-        tabContent = document.getElementsByClassName("tab-content");
-        for (i = 0; i < tabContent.length; i++) tabContent[i].classList.remove("active");
-        tabBtns = document.getElementsByClassName("tab-btn");
-        for (i = 0; i < tabBtns.length; i++) tabBtns[i].classList.remove("active");
-        document.getElementById(tabName).classList.add("active");
-        evt.currentTarget.classList.add("active");
-    }
-
     function startQuiz() {
-        const name = document.getElementById('student-name').value;
-        if(!name) return alert("กรุณากรอกชื่อก่อนเริ่มครับ");
-        
-        document.getElementById('user-display').innerText = name;
-        document.getElementById('learning-section').classList.add('hidden');
-        document.getElementById('instruction-section').classList.add('hidden');
-        document.getElementById('setup-screen').classList.add('hidden');
+        document.getElementById('lesson').classList.add('hidden');
         document.getElementById('quiz-area').classList.remove('hidden');
-
-        if(document.getElementById('mode').value === 'exam') {
-            timer = setInterval(() => {
-                time--;
-                let m = Math.floor(time/60), s = time % 60;
-                document.getElementById('timer').innerText = `${m}:${s.toString().padStart(2,'0')}`;
-                if(time <= 0) finishQuiz();
-            }, 1000);
-        } else {
-            document.getElementById('timer').innerText = "โหมดเรียนรู้";
-        }
     }
 
     function checkAnswer(id, k1, k2, pts) {
         if(answered.has(id)) return;
-        const val = document.getElementById('q'+id).value.toLowerCase();
+        const input = document.getElementById('q'+id).value.toLowerCase();
         const fb = document.getElementById('fb'+id);
         
-        if(val.includes(k1) && val.includes(k2)) {
+        if(input.includes(k1) && input.includes(k2)) {
             score += pts;
-            fb.innerHTML = '<span class="success">✔ ถูกต้อง!</span>';
+            fb.innerHTML = "<span style='color:var(--accent)'><i class='fas fa-check-circle'></i> ถูกต้อง! +"+pts+" คะแนน</span>";
+            document.getElementById('current-score').innerText = score;
             answered.add(id);
-            document.getElementById('score-display').innerText = score;
         } else {
-            fb.innerHTML = '<span class="error">✘ ยังไม่ถูกต้อง ลองใหม่อีกครั้ง</span>';
+            fb.innerHTML = "<span style='color:#ef4444'><i class='fas fa-times-circle'></i> ยังไม่ถูกต้อง ลองใหม่อีกครั้ง</span>";
         }
-        if(document.getElementById('mode').value === 'learn') document.getElementById('hint'+id).classList.remove('hidden');
     }
 
     function finishQuiz() {
-        clearInterval(timer);
+        if(answered.size < 5) {
+            if(!confirm("คุณยังทำไม่ครบทุกข้อ ยืนยันจะส่งหรือไม่?")) return;
+        }
         document.getElementById('quiz-area').classList.add('hidden');
         document.getElementById('result-screen').classList.remove('hidden');
-        document.getElementById('final-score').innerText = score + " คะแนน";
-        
-        if(score >= 40) {
+        document.getElementById('final-score').innerText = score;
+        if(score >= 80) {
             confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
-            document.getElementById('cert-box').classList.remove('hidden');
         }
     }
-
-    function downloadCert() {
-        const canvas = document.getElementById('certCanvas');
-        const ctx = canvas.getContext('2d');
-        const name = document.getElementById('student-name').value;
-
-        ctx.fillStyle = 'white';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        ctx.strokeStyle = '#2563eb'; ctx.lineWidth = 20;
-        ctx.strokeRect(40, 40, canvas.width - 80, canvas.height - 80);
-
-        ctx.textAlign = 'center'; ctx.fillStyle = '#1e293b';
-        ctx.font = 'bold 60px Prompt'; ctx.fillText('ใบประกาศนียบัตร', canvas.width/2, 200);
-        ctx.font = '40px Prompt'; ctx.fillText('มอบให้แก่', canvas.width/2, 300);
-        ctx.fillStyle = '#2563eb'; ctx.font = 'bold 80px Prompt'; ctx.fillText(name, canvas.width/2, 420);
-        ctx.fillStyle = '#1e293b'; ctx.font = '35px Prompt'; ctx.fillText('ได้ผ่านการทดสอบปฏิบัติ SQL VIEW Master Class', canvas.width/2, 550);
-        ctx.font = 'bold 40px Prompt'; ctx.fillText('คะแนนที่ได้: ' + score + ' คะแนน', canvas.width/2, 630);
-        
-        const link = document.createElement('a');
-        link.download = `Cert_${name}.png`;
-        link.href = canvas.toDataURL();
-        link.click();
-    }
 </script>
-
 </body>
 </html>
