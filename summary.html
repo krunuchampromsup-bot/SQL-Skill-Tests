@@ -2,20 +2,43 @@
 <html lang="th">
 <head>
 <meta charset="UTF-8">
-<title>สรุปคะแนน</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>สรุปผลสอบ</title>
 <style>
-body { font-family:sans-serif; padding:30px; text-align:center }
+body{font-family:sans-serif;padding:20px}
+table{width:100%;border-collapse:collapse}
+td,th{border:1px solid #ccc;padding:8px}
 </style>
 </head>
 
 <body>
-<h2>📊 สรุปผลการสอบ</h2>
-<h1 id="score"></h1>
-<p>ขอบคุณที่ทำแบบทดสอบ</p>
+<h2>📊 ผลการสอบ</h2>
+
+<p id="student"></p>
+
+<table>
+<tr><th>ข้อ</th><th>คะแนน</th></tr>
+<tbody id="detail"></tbody>
+</table>
+
+<h3 id="total"></h3>
 
 <script>
-let score = localStorage.getItem("sql_score") || 0;
-document.getElementById("score").innerText = "คะแนนรวม: " + score;
+let name = localStorage.getItem("studentName");
+let id = localStorage.getItem("studentId");
+let detail = JSON.parse(localStorage.getItem("detailScore") || "[]");
+
+document.getElementById("student").innerText =
+  "ชื่อ: " + name + " | รหัส: " + id;
+
+let sum = 0;
+detail.forEach((d,i)=>{
+  sum += d.score;
+  detailRow = `<tr><td>${i+1}</td><td>${d.score}</td></tr>`;
+  document.getElementById("detail").innerHTML += detailRow;
+});
+
+document.getElementById("total").innerText = "คะแนนรวม: " + sum;
 </script>
 </body>
 </html>
