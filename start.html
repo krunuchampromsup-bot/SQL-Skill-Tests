@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>เข้าสอบ SQL</title>
+<style>
+body { font-family:sans-serif; padding:20px }
+input,button { width:100%; padding:12px; margin:10px 0 }
+</style>
+</head>
+
+<body>
+<h2>📝 เข้าสอบ SQL</h2>
+
+<input id="studentName" placeholder="ชื่อ-สกุล">
+<input id="studentId" placeholder="รหัสนักเรียน">
+
+<button onclick="startExam()">เริ่มสอบ</button>
+
+<script>
+function startExam(){
+  localStorage.setItem("studentName", studentName.value);
+  localStorage.setItem("studentId", studentId.value);
+  window.location = "exam.html";
+}
+</script>
+</body>
+</html>
