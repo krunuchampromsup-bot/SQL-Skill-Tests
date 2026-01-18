@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<title>สรุปคะแนน</title>
+<style>
+body { font-family:sans-serif; padding:30px; text-align:center }
+</style>
+</head>
+
+<body>
+<h2>📊 สรุปผลการสอบ</h2>
+<h1 id="score"></h1>
+<p>ขอบคุณที่ทำแบบทดสอบ</p>
+
+<script>
+let score = localStorage.getItem("sql_score") || 0;
+document.getElementById("score").innerText = "คะแนนรวม: " + score;
+</script>
+</body>
+</html>
