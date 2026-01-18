@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>โหมดครู</title>
+<style>
+body{font-family:sans-serif;padding:20px}
+table{width:100%;border-collapse:collapse}
+th,td{border:1px solid #ccc;padding:6px;text-align:center}
+button{padding:10px;margin:10px 0}
+</style>
+</head>
+
+<body>
+<h2>👩‍🏫 คะแนนสอบทั้งห้อง</h2>
+
+<button onclick="exportCSV()">📥 ดาวน์โหลดคะแนน (CSV)</button>
+
+<table>
+<tr>
+  <th>ชื่อ</th>
+  <th>รหัส</th>
+  <th>คะแนนรวม</th>
+  <th>เวลา</th>
+</tr>
+<tbody id="list"></tbody>
+</table>
+
+<script>
+let data = JSON.parse(localStorage.getItem("allScores") || "[]");
+
+data.forEach(s=>{
+  document.getElementById("list").innerHTML +=
+  `<tr>
+    <td>${s.name}</td>
+    <td>${s.id}</td>
+    <td>${s.total}</td>
+    <td>${s.time}</td>
+  </tr>`;
+});
+
+function exportCSV(){
+  let csv = "ชื่อ,รหัส,คะแนน,เวลา\n";
+  data.forEach(s=>{
+    csv += `${s.name},${s.id},${s.total},${s.time}\n`;
+  });
+
+  let blob = new Blob([csv],{type:"text/csv"});
+  let a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "sql_exam_scores.csv";
+  a.click();
+}
+</script>
+</body>
+</html>
