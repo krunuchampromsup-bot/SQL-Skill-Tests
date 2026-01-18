@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<title>สอบ SQL : VIEW</title>
+<script src="sql-wasm.js"></script>
+<script src="questions.js"></script>
+<script src="exam.js"></script>
+<style>
+body { font-family: sans-serif; padding:20px }
+textarea { width:100%; height:120px }
+button { padding:8px 16px; margin-top:10px }
+</style>
+</head>
+
+<body>
+<h2>📝 แบบทดสอบ SQL (VIEW)</h2>
+<p id="qText"></p>
+
+<textarea id="sqlInput" placeholder="พิมพ์ SQL ที่นี่"></textarea>
+<br>
+<button onclick="submitAnswer()">ส่งคำตอบ</button>
+
+<p id="feedback"></p>
+</body>
+</html>
