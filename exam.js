@@ -1,6 +1,13 @@
 let db, current = 0, totalScore = 0;
+let examFinished = false;
 
-initSqlJs({ locateFile: f => f }).then(SQL => {
+// ================================
+// โหลด SQL.js
+// ================================
+initSqlJs({
+  locateFile: file => `https://sql.js.org/dist/${file}`
+}).then(SQL => {
+
   db = new SQL.Database();
 
   db.run(`
@@ -16,16 +23,27 @@ initSqlJs({ locateFile: f => f }).then(SQL => {
   showQuestion();
 });
 
+// ================================
+// แสดงคำถาม
+// ================================
 function showQuestion() {
   document.getElementById("qText").innerText =
-    "ข้อ " + (current+1) + ": " + questions[current].question;
+    "ข้อ " + (current + 1) + ": " + questions[current].question;
+
+  document.getElementById("feedback").innerText = "";
 }
 
+// ================================
+// ส่งคำตอบ
+// ================================
 function submitAnswer() {
+  if (examFinished) return;
+
   let sql = document.getElementById("sqlInput").value;
 
   try {
     db.run(sql);
+
     let correct = questions[current].check(db);
 
     if (correct) {
@@ -41,10 +59,36 @@ function submitAnswer() {
     if (current < questions.length) {
       showQuestion();
     } else {
-      localStorage.setItem("sql_score", totalScore);
-      window.location = "summary.html";
+      finishExam();
     }
-  } catch {
+
+  } catch (e) {
     document.getElementById("feedback").innerText = "❌ SQL Error";
   }
 }
+
+// ================================
+// จบการสอบ
+// ================================
+function finishExam() {
+  examFinished = true;
+  localStorage.setItem("sql_score", totalScore);
+  window.location = "summary.html";
+}
+
+// ================================
+// ตัวจับเวลา
+// ================================
+let timeLeft = 300; // 5 นาที
+
+let timer = setInterval(() => {
+  document.getElementById("timer").innerText =
+    "⏱ เหลือเวลา: " + timeLeft + " วินาที";
+
+  if (timeLeft <= 0) {
+    clearInterval(timer);
+    finishExam();
+  }
+
+  timeLeft--;
+}, 1000);
