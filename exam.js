@@ -92,3 +92,19 @@ let timer = setInterval(() => {
 
   timeLeft--;
 }, 1000);
+function finishExam(){
+  let record = {
+    name: localStorage.getItem("studentName"),
+    id: localStorage.getItem("studentId"),
+    total: totalScore,
+    detail: detailScore,
+    time: new Date().toLocaleString()
+  };
+
+  let all = JSON.parse(localStorage.getItem("allScores") || "[]");
+  all.push(record);
+  localStorage.setItem("allScores", JSON.stringify(all));
+
+  window.location = "summary.html";
+}
+
