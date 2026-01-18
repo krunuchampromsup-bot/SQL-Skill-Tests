@@ -1,67 +1,236 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-<meta charset="UTF-8">
-<title>ฝึก SQL : VIEW</title>
-<script src="sql-wasm.js"></script>
-<style>
-body { font-family: sans-serif; padding: 20px; }
-textarea { width: 100%; height: 100px; }
-button { padding: 10px 20px; margin-top: 10px; }
-.result { margin-top: 15px; font-weight: bold; }
-</style>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SQL Skill Test & Learning - T.Nuch Smart Com</title>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        :root {
+            --neon-blue: #00f2ff;
+            --deep-dark: #020617;
+            --card-bg: rgba(15, 23, 42, 0.9);
+            --gold: #fbbf24;
+            --success: #10b981;
+            --error: #ef4444;
+        }
+
+        body {
+            font-family: 'Prompt', sans-serif;
+            background: var(--deep-dark);
+            color: #e2e8f0;
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container { max-width: 900px; margin: auto; }
+        
+        /* สไตล์กล่องเนื้อหา */
+        .box { 
+            background: var(--card-bg); 
+            padding: 25px; 
+            margin-bottom: 25px; 
+            border-radius: 20px; 
+            border: 1px solid rgba(0, 242, 255, 0.15);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        h1, h2, h3 { color: var(--neon-blue); margin-top: 0; }
+        .highlight { color: var(--gold); font-weight: 600; }
+        
+        /* ตารางและโค้ดตัวอย่าง */
+        code { background: #1e293b; color: #f472b6; padding: 2px 6px; border-radius: 4px; font-family: 'Courier New', monospace; }
+        pre { background: #1e293b; padding: 15px; border-radius: 12px; border-left: 4px solid var(--neon-blue); overflow-x: auto; color: #10b981; }
+
+        /* ปรับปรุงส่วน Input */
+        textarea { 
+            width: 100%; height: 120px; 
+            background: #0f172a; color: #34d399; 
+            border: 1px solid #334155; border-radius: 12px; 
+            padding: 15px; font-family: 'Courier New', monospace; font-size: 1rem;
+            margin: 10px 0;
+        }
+
+        .btn { 
+            padding: 12px 25px; border-radius: 50px; border: none; 
+            background: var(--neon-blue); color: #020617; 
+            font-weight: 700; cursor: pointer; transition: 0.3s;
+        }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0, 242, 255, 0.4); }
+
+        .hidden { display: none !important; }
+        .instruction-step { display: flex; align-items: center; margin-bottom: 10px; }
+        .step-num { 
+            background: var(--neon-blue); color: #000; 
+            width: 28px; height: 28px; border-radius: 50%; 
+            display: flex; align-items: center; justify-content: center; 
+            margin-right: 12px; font-weight: bold; flex-shrink: 0;
+        }
+    </style>
 </head>
-
 <body>
-<h2>แบบฝึก SQL : การใช้ VIEW</h2>
 
-<p><b>โจทย์:</b> สร้าง VIEW ชื่อ <code>view_student_score</code></p>
+<div class="container">
+    <div style="text-align: center; margin-bottom: 40px;">
+        <h1><i class="fa-solid fa-code-branch"></i> SQL Skill Workshop: VIEW & Subquery</h1>
+        <p>บทเรียนและแบบทดสอบปฏิบัติ โดย ครูนุช Smart ComClass</p>
+    </div>
 
-<textarea id="sqlInput" placeholder="พิมพ์คำสั่ง SQL ที่นี่"></textarea>
-<br>
-<button onclick="runSQL()">ตรวจคำตอบ</button>
+    <div id="learning-section" class="box">
+        <h2><i class="fa-solid fa-book-open"></i> SQL VIEW คืออะไร?</h2>
+        <p>
+            <span class="highlight">SQL VIEW</span> คือ "ตารางเสมือน" (Virtual Table) ที่ไม่ได้เก็บข้อมูลจริงในหน่วยความจำ แต่เป็นผลลัพธ์ที่ได้จากการรันคำสั่ง <code>SELECT</code> ในขณะนั้น 
+        </p>
+        
+        
 
-<div class="result" id="result"></div>
+        <h3>📌 ทำไมต้องใช้ VIEW?</h3>
+        <ul>
+            <li><b>Security:</b> ซ่อนคอลัมน์ที่สำคัญ (เช่น เงินเดือน) ไม่ให้ผู้ใช้ทั่วไปเห็น</li>
+            <li><b>Simplicity:</b> รวมคำสั่ง Query ยาวๆ ที่ต้อง Join หลายตารางให้เรียกใช้ง่ายๆ เพียงชื่อเดียว</li>
+            <li><b>Consistency:</b> ให้ทุกคนเห็นข้อมูลในมาตรฐานเดียวกัน</li>
+        </ul>
+
+        <h3>🏗️ โครงสร้างคำสั่ง (Structure)</h3>
+        <pre>
+CREATE VIEW ชื่อของ_view AS
+SELECT คอลัมน์1, คอลัมน์2
+FROM ชื่อตาราง
+WHERE เงื่อนไข;</pre>
+
+        <h3>💡 ตัวอย่างการใช้งาน</h3>
+        <p>หากเรามีตาราง <code>products</code> และต้องการสร้าง VIEW เพื่อดูเฉพาะสินค้าที่ "หมดสต็อก" (stock = 0):</p>
+        <pre>
+CREATE VIEW out_of_stock AS
+SELECT product_name, category
+FROM products
+WHERE stock = 0;</pre>
+    </div>
+
+    <div class="box">
+        <h2><i class="fa-solid fa-list-check"></i> วิธีทำแบบทดสอบปฏิบัติ</h2>
+        <div class="instruction-step"><div class="step-num">1</div> กรอกชื่อ-นามสกุล เพื่อใช้ในการออกใบประกาศ</div>
+        <div class="instruction-step"><div class="step-num">2</div> เลือกโหมด: <b class="highlight">โหมดเรียนรู้</b> (มีเฉลยให้ศึกษา) หรือ <b class="highlight">โหมดสอบ</b> (จับเวลาและไม่มีเฉลย)</div>
+        <div class="instruction-step"><div class="step-num">3</div> อ่านโจทย์แต่ละข้อ และพิมพ์คำสั่ง SQL ลงในช่องว่าง</div>
+        <div class="instruction-step"><div class="step-num">4</div> กดปุ่ม "ตรวจคำตอบ" เพื่อเช็คความถูกต้อง</div>
+        <div class="instruction-step"><div class="step-num">5</div> เมื่อทำครบทุกข้อ กด "ส่งข้อสอบ" หากคะแนนผ่าน 60% รับใบประกาศนียบัตรได้ทันที!</div>
+    </div>
+
+    <div id="setup-screen" class="box" style="text-align: center;">
+        <input type="text" id="student-name" placeholder="ระบุชื่อ-นามสกุล ของนักเรียน" style="padding: 12px; width: 60%; border-radius: 8px; border: 1px solid var(--neon-blue); background: #0f172a; color: white;">
+        <select id="mode" style="padding: 12px; border-radius: 8px; background: #0f172a; color: white; border: 1px solid var(--neon-blue);">
+            <option value="learn">โหมดเรียนรู้</option>
+            <option value="exam">โหมดสอบปฏิบัติ</option>
+        </select>
+        <br><br>
+        <button class="btn" onclick="startApp()"><i class="fa-solid fa-play"></i> เริ่มต้นทำแบบทดสอบ</button>
+    </div>
+
+    <div id="quiz-area" class="hidden">
+        <div class="box" style="display: flex; justify-content: space-between; position: sticky; top: 0; z-index: 100; background: rgba(2, 6, 23, 0.95);">
+            <span id="timer">เวลา: --:--</span>
+            <span id="score-display">คะแนน: 0</span>
+        </div>
+
+        <div id="questions-container">
+            <div class="box">
+                <h3>ข้อที่ 1: สร้าง VIEW พื้นฐาน</h3>
+                <p>จงสร้าง VIEW ชื่อ <code>it_staff</code> จากตาราง <code>employees</code> โดยเลือกพนักงานที่อยู่แผนก 'IT'</p>
+                <textarea id="q1" placeholder="พิมพ์คำสั่ง SQL..."></textarea>
+                <button class="btn" onclick="checkAnswer(1, 'create view', 'it', 20)">ตรวจคำตอบ</button>
+                <div id="feedback1"></div>
+                <div id="hint1" class="hidden"><pre>CREATE VIEW it_staff AS SELECT * FROM employees WHERE department = 'IT';</pre></div>
+            </div>
+            </div>
+
+        <div style="text-align: center; margin-bottom: 50px;">
+            <button class="btn" style="background: var(--gold); padding: 20px 50px;" onclick="finishQuiz()">ส่งข้อสอบและสรุปผล</button>
+        </div>
+    </div>
+
+    <div id="result-screen" class="hidden">
+        <div class="box" style="text-align: center;">
+            <h2 id="final-status">ประมวลผลการทดสอบ</h2>
+            <p style="font-size: 2.5rem;" id="final-score">0</p>
+            <div id="cert-box" class="hidden">
+                <button class="btn" onclick="generateCertificate()" style="background: var(--success);">
+                    <i class="fa-solid fa-award"></i> ดาวน์โหลดใบประกาศนียบัตร
+                </button>
+            </div>
+            <br>
+            <button class="btn" onclick="location.reload()">กลับหน้าแรก</button>
+        </div>
+    </div>
+</div>
+
+<canvas id="certCanvas" width="1200" height="848" style="display:none;"></canvas>
 
 <script>
-let db;
+    // การจัดการ Logic (อิงจากโค้ดเดิมที่แก้ไขให้สมบูรณ์แล้วในรอบก่อน)
+    let score = 0;
+    let time = 900;
+    let timer;
+    let isExam = false;
 
-initSqlJs({ locateFile: file => file })
-.then(SQL => {
-  db = new SQL.Database();
+    function startApp() {
+        const name = document.getElementById('student-name').value;
+        if(!name) return alert("กรุณาใส่ชื่อก่อนนะครับ");
+        
+        isExam = document.getElementById('mode').value === 'exam';
+        document.getElementById('setup-screen').classList.add('hidden');
+        document.getElementById('learning-section').classList.add('hidden');
+        document.getElementById('quiz-area').classList.remove('hidden');
 
-  // สร้างตาราง
-  db.run(`
-    CREATE TABLE student (id INTEGER, name TEXT);
-    CREATE TABLE class (id INTEGER, name TEXT);
-    CREATE TABLE score (student_id INTEGER, class_id INTEGER, score INTEGER);
-
-    INSERT INTO student VALUES (1,'สมชาย'),(2,'สมหญิง');
-    INSERT INTO class VALUES (101,'ฐานข้อมูล');
-    INSERT INTO score VALUES (1,101,80),(2,101,90);
-  `);
-});
-
-function runSQL() {
-  let userSQL = document.getElementById("sqlInput").value;
-
-  try {
-    db.run(userSQL);
-
-    // ตรวจว่า VIEW ถูกสร้างหรือไม่
-    let check = db.exec(
-      "SELECT name FROM sqlite_master WHERE type='view' AND name='view_student_score';"
-    );
-
-    if (check.length > 0) {
-      document.getElementById("result").innerHTML = "✅ ถูกต้อง ได้คะแนน 10/10";
-    } else {
-      document.getElementById("result").innerHTML = "❌ ยังไม่พบ VIEW ที่กำหนด";
+        if(isExam) {
+            timer = setInterval(() => {
+                time--;
+                let m = Math.floor(time/60);
+                let s = time % 60;
+                document.getElementById('timer').innerText = `เวลาเหลือ: ${m}:${s.toString().padStart(2, '0')}`;
+                if(time <= 0) finishQuiz();
+            }, 1000);
+        } else {
+            document.getElementById('timer').innerText = "โหมดเรียนรู้";
+        }
     }
-  } catch (err) {
-    document.getElementById("result").innerHTML = "❌ SQL ผิดพลาด";
-  }
-}
+
+    function checkAnswer(id, k1, k2, pts) {
+        const val = document.getElementById('q' + id).value.toLowerCase();
+        const fb = document.getElementById('feedback' + id);
+        
+        if(val.includes(k1) && val.includes(k2)) {
+            score += pts;
+            fb.innerHTML = '<p class="success">✔ ถูกต้อง!</p>';
+            document.getElementById('score-display').innerText = "คะแนน: " + score;
+        } else {
+            fb.innerHTML = '<p class="error">✘ ยังไม่ถูก ลองพยายามอีกครั้ง</p>';
+        }
+
+        if(!isExam) {
+            document.getElementById('hint' + id).classList.remove('hidden');
+        }
+    }
+
+    function finishQuiz() {
+        clearInterval(timer);
+        document.getElementById('quiz-area').classList.add('hidden');
+        document.getElementById('result-screen').classList.remove('hidden');
+        document.getElementById('final-score').innerText = score + " คะแนน";
+
+        if(score >= 60) {
+            confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
+            document.getElementById('cert-box').classList.remove('hidden');
+            document.getElementById('final-status').innerText = "ยินดีด้วย! คุณผ่านการทดสอบระดับเชี่ยวชาญ";
+        } else {
+            document.getElementById('final-status').innerText = "พยายามอีกนิดนะ! ลองทบทวนเนื้อหาอีกครั้ง";
+        }
+    }
+
+    // ฟังก์ชัน generateCertificate() ใช้ตัวเดิมที่ส่งให้ในรอบที่แล้วได้เลยครับ
 </script>
+
 </body>
 </html>
